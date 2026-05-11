@@ -1,4 +1,4 @@
-package Logic;
+package logic;
 
 public class BSTHashTable<K extends Comparable<K>, V> {
 
@@ -42,5 +42,11 @@ public class BSTHashTable<K extends Comparable<K>, V> {
         if (key == null) throw new IllegalArgumentException("Ключ не может быть null");
         int index = hash(key);
         table[index].remove(key);
+    }
+    public int getCapacity(){
+        return this.capacity;
+    }
+    public BinarySearchTree<K, V> getTreeAt(int index) {
+        return table[index];
     }
 }

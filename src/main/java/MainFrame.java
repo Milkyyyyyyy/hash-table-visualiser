@@ -1,4 +1,10 @@
+import logic.BSTHashTable;
+import visual.BSTRenderer;
+import visual.HashTableModel;
+import visual.SmoothScrollPane;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -6,6 +12,8 @@ import javax.swing.text.DocumentFilter;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
+    private HashTableModel tableModel;
+    private BSTHashTable<Integer, String> myTable;
 
     public MainFrame() {
         // 1. Базовые настройки окна
@@ -24,6 +32,8 @@ public class MainFrame extends JFrame {
         JPanel mainPanel = new JPanel();
 
         UIManager.put("Button.font", new Font("Segoe UI", Font.PLAIN, 12));
+        UIManager.put("Table.selectionInsets", new Insets(1, 1, 1, 1));
+        UIManager.put("ScrollPane.smoothScrolling", true);
 
         // Устанавливаем менеджер компоновки (BorderLayout удобен для разделения на зоны: центр, края)
         mainPanel.setLayout(new BorderLayout());
@@ -64,6 +74,34 @@ public class MainFrame extends JFrame {
         clearButton.setBackground(new Color(253,253,253));
         clearButton.setForeground(new Color(90,91,91));
 
+        // ТАБЛИЦА
+        myTable = new BSTHashTable<>(15);
+        tableModel = new HashTableModel(myTable);
+        JTable jTable = new JTable(tableModel);
+
+        // Настройка внешнего вида таблицы
+        jTable.setRowHeight(80);
+        jTable.setShowGrid(true);
+        jTable.setGridColor(Color.LIGHT_GRAY);
+        jTable.setSelectionBackground(new Color(239,244,250));
+        jTable.setSelectionForeground(new Color(10, 10, 10));
+        jTable.setForeground(new Color(10, 10, 10));
+        jTable.getColumnModel().getColumn(0).setMaxWidth(100);
+        jTable.getColumnModel().getColumn(1).setCellRenderer(new BSTRenderer());
+
+        jTable.getTableHeader().setReorderingAllowed(false);
+        jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER); // Центровка по горизонтали
+        centerRenderer.setVerticalAlignment(JLabel.CENTER);   // Центровка по вертикали (если ячейка высокая)
+        jTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+
+        SmoothScrollPane scrollPane = new SmoothScrollPane(jTable);
+
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        mainPanel.add(scrollPane, BorderLayout.WEST);
 
         // Добавляем всё на панель
         controlPanel.add(keyLabel);

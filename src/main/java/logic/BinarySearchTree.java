@@ -1,9 +1,9 @@
-package Logic;
+package logic;
 
 
 /** TODO
  * Здесь надо будет добавить ссылку на объект swing, с помощью которого мы уже будем отправлять все запросы на анимации*/
-class BinarySearchTree<K extends Comparable<K>, V> {
+public class BinarySearchTree<K extends Comparable<K>, V> {
 
     private class Node {
         K key;
