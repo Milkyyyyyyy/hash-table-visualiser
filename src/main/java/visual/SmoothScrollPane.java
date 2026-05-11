@@ -14,7 +14,6 @@ public class SmoothScrollPane extends JScrollPane {
         super(view);
         initSmoothScrolling();
     }
-
     private void initSmoothScrolling() {
         final JViewport viewport = getViewport();
 
