@@ -1,112 +1,169 @@
 {
   "nodes": [
     {
+      "id": "entry",
+      "type": "group",
+      "label": "ENTRY POINT",
+      "x": -100,
+      "y": -280,
+      "width": 300,
+      "height": 140
+    },
+    {
       "id": "main",
       "type": "text",
       "text": "Main",
       "x": 0,
-      "y": -200,
-      "width": 120,
-      "height": 60
+      "y": -240,
+      "width": 100,
+      "height": 50,
+      "parent": "entry"
     },
     {
       "id": "mainframe",
       "type": "text",
       "text": "MainFrame",
       "x": 0,
-      "y": -80,
-      "width": 120,
-      "height": 60
+      "y": -160,
+      "width": 100,
+      "height": 50,
+      "parent": "entry"
+    },
+    {
+      "id": "logic",
+      "type": "group",
+      "label": "LOGIC",
+      "x": -500,
+      "y": 0,
+      "width": 320,
+      "height": 300
     },
     {
       "id": "bsthash",
       "type": "text",
       "text": "BSTHashTable",
-      "x": -280,
-      "y": 80,
+      "x": -400,
+      "y": 60,
       "width": 140,
-      "height": 60
+      "height": 50,
+      "parent": "logic"
     },
     {
       "id": "bst",
       "type": "text",
-      "text": "BinarySearchTree\n(buckets)",
-      "x": -280,
-      "y": 200,
+      "text": "BinarySearchTree",
+      "x": -400,
+      "y": 150,
       "width": 140,
-      "height": 60
+      "height": 50,
+      "parent": "logic"
+    },
+    {
+      "id": "util",
+      "type": "group",
+      "label": "UTIL",
+      "x": -650,
+      "y": 0,
+      "width": 280,
+      "height": 300
     },
     {
       "id": "node",
       "type": "text",
       "text": "Node",
-      "x": -450,
-      "y": 200,
-      "width": 120,
-      "height": 60
-    },
-    {
-      "id": "stepplayer",
-      "type": "text",
-      "text": "StepPlayer",
-      "x": 200,
-      "y": 80,
-      "width": 120,
-      "height": 60
-    },
-    {
-      "id": "step",
-      "type": "text",
-      "text": "Step",
-      "x": 200,
-      "y": 200,
-      "width": 120,
-      "height": 60
-    },
-    {
-      "id": "bstcanvas",
-      "type": "text",
-      "text": "BSTCanvas",
-      "x": 480,
-      "y": 80,
-      "width": 120,
-      "height": 60
-    },
-    {
-      "id": "treepainter",
-      "type": "text",
-      "text": "TreePainter",
-      "x": 480,
-      "y": 200,
-      "width": 120,
-      "height": 60
+      "x": -570,
+      "y": 60,
+      "width": 100,
+      "height": 50,
+      "parent": "util"
     },
     {
       "id": "nodelayout",
       "type": "text",
       "text": "NodeLayout",
-      "x": 650,
-      "y": 200,
-      "width": 120,
-      "height": 60
+      "x": -570,
+      "y": 150,
+      "width": 100,
+      "height": 50,
+      "parent": "util"
     },
     {
-      "id": "logpanel",
+      "id": "animation",
+      "type": "group",
+      "label": "ANIMATION",
+      "x": 100,
+      "y": 0,
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "stepplayer",
       "type": "text",
-      "text": "OperationLogPanel",
+      "text": "StepPlayer",
+      "x": 180,
+      "y": 60,
+      "width": 120,
+      "height": 50,
+      "parent": "animation"
+    },
+    {
+      "id": "step",
+      "type": "text",
+      "text": "Step",
+      "x": 180,
+      "y": 150,
+      "width": 100,
+      "height": 50,
+      "parent": "animation"
+    },
+    {
+      "id": "visual",
+      "type": "group",
+      "label": "VISUAL",
       "x": 480,
-      "y": -80,
-      "width": 140,
-      "height": 60
+      "y": 0,
+      "width": 400,
+      "height": 300
+    },
+    {
+      "id": "bstcanvas",
+      "type": "text",
+      "text": "BSTCanvas",
+      "x": 540,
+      "y": 60,
+      "width": 120,
+      "height": 50,
+      "parent": "visual"
+    },
+    {
+      "id": "treepainter",
+      "type": "text",
+      "text": "TreePainter",
+      "x": 540,
+      "y": 150,
+      "width": 120,
+      "height": 50,
+      "parent": "visual"
     },
     {
       "id": "htmodel",
       "type": "text",
       "text": "HashTableModel",
-      "x": 0,
-      "y": 80,
+      "x": 700,
+      "y": 60,
+      "width": 120,
+      "height": 50,
+      "parent": "visual"
+    },
+    {
+      "id": "logpanel",
+      "type": "text",
+      "text": "OperationLogPanel",
+      "x": 700,
+      "y": 150,
       "width": 140,
-      "height": 60
+      "height": 50,
+      "parent": "visual"
     }
   ],
   "edges": [
