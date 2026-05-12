@@ -1,40 +1,54 @@
 package logic;
 
+import visual.OperationLogPanel;
+
+/**
+ * Хеш-таблица с открытой адресацией через цепочки BST.
+ * Каждый бакет — отдельное бинарное дерево поиска.
+ */
 public class BSTHashTable {
 
     private final int capacity;
-    private final BinarySearchTree[] table;
+    private final BinarySearchTree[] buckets;
 
     public BSTHashTable(int capacity) {
         if (capacity <= 0) {
-            throw new IllegalArgumentException("Capacity must be positive");
+            throw new IllegalArgumentException("Ёмкость таблицы должна быть положительной");
         }
         this.capacity = capacity;
-        this.table = new BinarySearchTree[capacity];
+        this.buckets = new BinarySearchTree[capacity];
         for (int i = 0; i < capacity; i++) {
-            table[i] = new BinarySearchTree();
+            buckets[i] = new BinarySearchTree(this);
         }
     }
 
+    /** Возвращает индекс бакета для заданного значения. */
     private int hash(int value) {
         return Math.floorMod(value, capacity);
     }
 
+    public int getBucketIndex(int value){
+        return hash(value);
+    }
+
+
     public void add(int value) {
-        table[hash(value)].insert(value);
+        int hash = hash(value);
+        buckets[hash].insert(value);
+
     }
 
     public boolean contains(int value) {
-        return table[hash(value)].contains(value);
+        return buckets[hash(value)].contains(value);
     }
 
     public void remove(int value) {
-        table[hash(value)].remove(value);
+        buckets[hash(value)].remove(value);
     }
 
     public void clear() {
-        for (BinarySearchTree tree : table) {
-            tree.clear();
+        for (BinarySearchTree bucket : buckets) {
+            bucket.clear();
         }
     }
 
@@ -42,7 +56,7 @@ public class BSTHashTable {
         return capacity;
     }
 
-    public BinarySearchTree getTreeAt(int index) {
-        return table[index];
+    public BinarySearchTree getBucketAt(int index) {
+        return buckets[index];
     }
 }

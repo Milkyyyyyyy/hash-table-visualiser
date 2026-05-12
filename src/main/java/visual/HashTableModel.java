@@ -4,9 +4,15 @@ import logic.BSTHashTable;
 
 import javax.swing.table.AbstractTableModel;
 
+/**
+ * Табличная модель для отображения хеш-таблицы в JTable.
+ * Колонки: «Индекс» (int) и «Бакет (BST)» (BinarySearchTree).
+ */
 public class HashTableModel extends AbstractTableModel {
+
+    private static final String[] COLUMN_NAMES = {"Индекс", "Бакет (BST)"};
+
     private final BSTHashTable hashTable;
-    private final String[] columnNames = {"Индекс", "Бакет (BST)"};
 
     public HashTableModel(BSTHashTable hashTable) {
         this.hashTable = hashTable;
@@ -19,7 +25,12 @@ public class HashTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return columnNames.length;
+        return COLUMN_NAMES.length;
+    }
+
+    @Override
+    public String getColumnName(int column) {
+        return COLUMN_NAMES[column];
     }
 
     @Override
@@ -27,14 +38,10 @@ public class HashTableModel extends AbstractTableModel {
         if (columnIndex == 0) {
             return rowIndex;
         }
-        return hashTable.getTreeAt(rowIndex);
+        return hashTable.getBucketAt(rowIndex);
     }
 
-    @Override
-    public String getColumnName(int column) {
-        return columnNames[column];
-    }
-
+    /** Уведомляет таблицу, что данные изменились, и требует перерисовки. */
     public void refresh() {
         fireTableDataChanged();
     }

@@ -3,38 +3,34 @@ package visual;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Панель журнала операций.
- * Наследуется от JPanel и отображает лог действий с временными метками.
+ * Панель журнала операций с временными метками.
  *
  * Основные методы:
- *   log(String message)             — добавить запись стандартным цветом
+ *   log(String message)              — добавить запись цветом по умолчанию
  *   log(String message, Color color) — добавить запись произвольным цветом
- *   clear()                         — очистить лог
+ *   clear()                          — очистить журнал
  */
 public class OperationLogPanel extends JPanel {
 
-    // ── внешний вид ──────────────────────────────────────────────────────────
+    // ── Цвета ─────────────────────────────────────────────────────────────────
     private static final Color BG_COLOR        = new Color(0xF9F9F9);
     private static final Color HEADER_BG       = new Color(0xF0F0F0);
     private static final Color BORDER_COLOR    = new Color(0xD0D0D0);
     private static final Color TIMESTAMP_COLOR = new Color(0x888888);
-    private static final Color DEFAULT_TEXT    = new Color(0x222222);
-    private static final Color SUCCESS_COLOR   = new Color(0x2E7D32); // тёмно-зелёный
+    public static final Color DEFAULT_COLOR   = new Color(0x222222);
 
     private static final Font MONO_FONT  = new Font("Monospaced", Font.PLAIN, 13);
-    private static final Font LABEL_FONT = new Font("SansSerif", Font.BOLD, 13);
+    private static final Font LABEL_FONT = new Font("SansSerif",  Font.BOLD,  13);
 
-    private static final DateTimeFormatter TIME_FMT =
-            DateTimeFormatter.ofPattern("HH:mm:ss");
+    private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    // ── компоненты ────────────────────────────────────────────────────────────
-    private final JPanel  entriesPanel; // вертикальный список записей
-    private final JScrollPane scrollPane;
+    // ── Компоненты ────────────────────────────────────────────────────────────
+    private final JPanel      entriesPanel;
+    private final SmoothScrollPane scrollPane;
 
     // ─────────────────────────────────────────────────────────────────────────
 
@@ -43,73 +39,44 @@ public class OperationLogPanel extends JPanel {
         setBackground(BG_COLOR);
         setBorder(BorderFactory.createLineBorder(BORDER_COLOR));
 
-        // ── шапка ────────────────────────────────────────────────────────────
-        JPanel header = new JPanel(new BorderLayout());
-        header.setBackground(HEADER_BG);
-        header.setBorder(new EmptyBorder(6, 10, 6, 10));
+        // Шапка
+        add(buildHeader(), BorderLayout.NORTH);
 
-        JLabel title = new JLabel("Журнал операций");
-        title.setFont(LABEL_FONT);
-        title.setForeground(DEFAULT_TEXT);
-        header.add(title, BorderLayout.WEST);
-
-        JButton clearBtn = new JButton("Очистить лог");
-        clearBtn.setFont(new Font("SansSerif", Font.PLAIN, 12));
-        clearBtn.setFocusPainted(false);
-        clearBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        clearBtn.addActionListener((ActionEvent e) -> clear());
-        header.add(clearBtn, BorderLayout.EAST);
-
-        add(header, BorderLayout.NORTH);
-
-        // ── тело: список записей ─────────────────────────────────────────────
+        // Список записей
         entriesPanel = new JPanel();
         entriesPanel.setLayout(new BoxLayout(entriesPanel, BoxLayout.Y_AXIS));
         entriesPanel.setBackground(BG_COLOR);
         entriesPanel.setBorder(new EmptyBorder(4, 0, 4, 0));
 
-        scrollPane = new JScrollPane(entriesPanel);
+        // Скроллируемая область
+        scrollPane = new SmoothScrollPane(entriesPanel);
         scrollPane.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, BORDER_COLOR));
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         add(scrollPane, BorderLayout.CENTER);
+
+        // в конце конструктора, для теста
+        log("Панель инициализирована");
     }
 
-    // ── публичные методы ──────────────────────────────────────────────────────
+    // ── Публичный API ─────────────────────────────────────────────────────────
 
-    /**
-     * Добавить запись стандартным (тёмным) цветом.
-     */
+    /** Добавляет запись цветом по умолчанию. */
     public void log(String message) {
-        log(message, DEFAULT_TEXT);
+        log(message, DEFAULT_COLOR);
     }
 
-    /**
-     * Добавить запись произвольным цветом.
-     *
-     * @param message текст записи
-     * @param color   цвет текста
-     */
+    /** Добавляет запись с заданным цветом текста. */
     public void log(String message, Color color) {
         SwingUtilities.invokeLater(() -> {
-            JPanel row = buildRow(message, color);
-            entriesPanel.add(row);
+            entriesPanel.add(buildRow(message, color));
             entriesPanel.revalidate();
             entriesPanel.repaint();
-            scrollToBottom();
+            SwingUtilities.invokeLater(this::scrollToBottom);
         });
     }
 
-    /**
-     * Удобный вариант — передать цвет через RGB-int, например 0x2E7D32.
-     */
-    public void log(String message, int rgb) {
-        log(message, new Color(rgb));
-    }
-
-    /**
-     * Очистить все записи.
-     */
+    /** Удаляет все записи из журнала. */
     public void clear() {
         SwingUtilities.invokeLater(() -> {
             entriesPanel.removeAll();
@@ -118,36 +85,70 @@ public class OperationLogPanel extends JPanel {
         });
     }
 
-    // ── вспомогательные ───────────────────────────────────────────────────────
+    // ── Построение UI ─────────────────────────────────────────────────────────
 
-    /** Собирает одну строку лога: [время] + текст. */
+    private JPanel buildHeader() {
+        JPanel header = new JPanel(new BorderLayout());
+        header.setBackground(HEADER_BG);
+        header.setBorder(new EmptyBorder(6, 10, 6, 10));
+
+        JLabel title = new JLabel("Журнал операций");
+        title.setFont(LABEL_FONT);
+        title.setForeground(DEFAULT_COLOR);
+
+        JButton clearBtn = new JButton("Очистить лог");
+        clearBtn.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        clearBtn.setFocusPainted(false);
+        clearBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        clearBtn.addActionListener(e -> clear());
+
+        header.add(title,    BorderLayout.WEST);
+        header.add(clearBtn, BorderLayout.EAST);
+        return header;
+    }
+
+    /** Собирает одну строку лога: метка времени + текст сообщения. */
     private JPanel buildRow(String message, Color textColor) {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         row.setBackground(BG_COLOR);
         row.setBorder(new EmptyBorder(2, 10, 2, 10));
-        row.setMaximumSize(new Dimension(Integer.MAX_VALUE, row.getPreferredSize().height));
 
-        // метка времени
-        JLabel timestamp = new JLabel("[" + LocalTime.now().format(TIME_FMT) + "]   ");
+        JLabel timestamp = new JLabel("[" + LocalTime.now().format(TIME_FORMAT) + "]   ");
         timestamp.setFont(MONO_FONT);
         timestamp.setForeground(TIMESTAMP_COLOR);
 
-        // текст сообщения
         JLabel text = new JLabel(message);
         text.setFont(MONO_FONT);
         text.setForeground(textColor);
 
         row.add(timestamp);
         row.add(text);
+
+        // Только после добавления компонентов — иначе height будет 0
+        row.setMaximumSize(new Dimension(Integer.MAX_VALUE, row.getPreferredSize().height));
+
         return row;
     }
 
-    /** Прокрутить журнал вниз после добавления записи. */
+    /** Прокручивает журнал вниз после добавления новой записи. */
+    /** Плавно прокручивает журнал вниз с анимацией. */
     private void scrollToBottom() {
         JScrollBar bar = scrollPane.getVerticalScrollBar();
-        bar.setValue(bar.getMaximum());
+        int target = bar.getMaximum() - bar.getVisibleAmount();
+
+        Timer timer = new Timer(16, null);
+        timer.addActionListener(e -> {
+            int current = bar.getValue();
+            int distance = target - current;
+
+            if (distance <= 1) {
+                bar.setValue(target);
+                timer.stop();
+            } else {
+                // Lerp: каждый кадр проходим 15% оставшегося расстояния
+                bar.setValue(current + Math.max(1, distance / 7));
+            }
+        });
+        timer.start();
     }
-
-
-
 }

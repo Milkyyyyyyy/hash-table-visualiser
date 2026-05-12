@@ -1,5 +1,8 @@
 package util;
 
+/**
+ * Узел бинарного дерева поиска.
+ */
 public class Node {
     public int value;
     public Node left;

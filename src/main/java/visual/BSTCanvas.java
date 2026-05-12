@@ -1,5 +1,6 @@
 package visual;
 
+import animation.StepPlayer;
 import logic.BinarySearchTree;
 import util.NodeLayout;
 
@@ -8,47 +9,57 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import static visual.TreePainter.stepAnimation;
-
+/**
+ * Панель для детальной визуализации одного дерева BST.
+ * Отображается в правой части главного окна при выборе строки таблицы.
+ */
 public class BSTCanvas extends JPanel {
-    private BinarySearchTree tree;
-    Map<Integer, NodeLayout> layouts = new HashMap<>();
 
+    private BinarySearchTree tree;
+    private final Map<Integer, NodeLayout> layouts = new HashMap<>();
+    StepPlayer stepPlayer;
+
+    public void setStepPlayer(StepPlayer stepPlayer){
+        this.stepPlayer = stepPlayer;
+    }
+    /** Задаёт дерево для отрисовки и запускает перерисовку. */
     public void setTree(BinarySearchTree tree) {
         this.tree = tree;
-        repaint(); // Перерисовываем, когда дерево меняется
+        repaint();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g); // Очистка фона
+        super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;
-        // Включаем сглаживание
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+        // Рамка вокруг канваса
         g2.setColor(new Color(10, 10, 10, 50));
-        g2.drawRoundRect(0, 0, (int)(getWidth()*0.95), (int)(getHeight()*0.95), 30, 30);
+        g2.drawRoundRect(0, 0, (int) (getWidth() * 0.95), (int) (getHeight() * 0.95), 30, 30);
 
         if (tree == null || tree.isEmpty()) {
             g.drawString("Выберите дерево для визуализации", 20, 20);
             return;
         }
 
+        // Обновляем целевые позиции узлов
+        tree.updateLayout(layouts, getWidth(), (int) (getHeight() * 0.8));
+        Integer active = stepPlayer.getActiveValue();
+        if(active != null) {
+            for (Map.Entry<Integer, NodeLayout> e : layouts.entrySet()) {
+                e.getValue().isActive = e.getKey().equals(active);
+            }
+        }
 
+        // Делаем шаг анимации
+        boolean animating = TreePainter.stepAnimation(layouts);
 
-        // 1. Обновляем координаты под большой размер
-        tree.updateLayout(layouts, getWidth(), (int)(getHeight()*0.8));
-
-        // 2. Двигаем анимацию
-        boolean animating = stepAnimation(layouts);
-
-        // 3. Рисуем дерево
+        // Рисуем дерево с увеличенными узлами
         TreePainter.drawTree(g2, layouts, tree.getRoot(), 50, 30, true);
 
-
-
-        // 5. Если дерево еще "плывет", продолжаем цикл анимации
+        // Пока анимация не завершена — перерисовываем каждый кадр
         if (animating) {
             repaint();
         }
