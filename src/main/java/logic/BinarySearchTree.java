@@ -1,101 +1,166 @@
 package logic;
 
+import util.Node;
+import util.NodeLayout;
 
-/** TODO
- * Здесь надо будет добавить ссылку на объект swing, с помощью которого мы уже будем отправлять все запросы на анимации*/
-public class BinarySearchTree<K extends Comparable<K>, V> {
+import java.util.HashMap;
+import java.util.Map;
 
-    private class Node {
-        K key;
-        V value;
-        Node left, right;
-
-        public Node(K key, V value) {
-            this.key = key;
-            this.value = value;
-        }
-    }
+/**
+ * Простое BST для целых чисел.
+ * Используется как цепочка в одной корзине хеш-таблицы.
+ */
+public class BinarySearchTree {
 
     private Node root;
 
-    // Вставка или обновление значения
-    public void put(K key, V value) {
-        root = put(root, key, value);
+    public Node getRoot(){
+        return root;
+    }
+    public void insert(int value) {
+        root = insert(root, value);
     }
 
-    private Node put(Node node, K key, V value) {
+    private Node insert(Node node, int value) {
         if (node == null) {
-            return new Node(key, value);
+            return new Node(value);
         }
 
-        int cmp = key.compareTo(node.key);
-        if (cmp < 0) {
-            node.left = put(node.left, key, value);
-        } else if (cmp > 0) {
-            node.right = put(node.right, key, value);
-        } else {
-            // Если ключ уже существует, просто обновляем значение
-            node.value = value;
+        if (value < node.value) {
+            node.left = insert(node.left, value);
+        } else if (value > node.value) {
+            node.right = insert(node.right, value);
         }
         return node;
     }
 
-    // Поиск значения по ключу
-    public V get(K key) {
-        Node node = get(root, key);
-        return node == null ? null : node.value;
+    public boolean contains(int value) {
+        return contains(root, value);
     }
 
-    private Node get(Node node, K key) {
+    private boolean contains(Node node, int value) {
+        if (node == null) {
+            return false;
+        }
+        if (value < node.value) {
+            return contains(node.left, value);
+        }
+        if (value > node.value) {
+            return contains(node.right, value);
+        }
+
+        return true;
+    }
+
+
+    public void remove(int value) {
+        root = remove(root, value);
+    }
+
+    private Node remove(Node node, int value) {
         if (node == null) {
             return null;
         }
 
-        int cmp = key.compareTo(node.key);
-        if (cmp < 0) {
-            return get(node.left, key);
-        } else if (cmp > 0) {
-            return get(node.right, key);
+        if (value < node.value) {
+            node.left = remove(node.left, value);
+        } else if (value > node.value) {
+            node.right = remove(node.right, value);
         } else {
-            return node; // Ключ найден
-        }
-    }
+            if (node.right == null) {
+                return node.left;
+            }
+            if (node.left == null) {
+                return node.right;
+            }
 
-    // Удаление узла по ключу
-    public void remove(K key) {
-        root = remove(root, key);
-    }
-
-    private Node remove(Node node, K key) {
-        if (node == null) return null;
-
-        int cmp = key.compareTo(node.key);
-        if (cmp < 0) {
-            node.left = remove(node.left, key);
-        } else if (cmp > 0) {
-            node.right = remove(node.right, key);
-        } else {
-            // Узел найден. Обрабатываем три случая:
-            if (node.right == null) return node.left;   // Нет правого потомка
-            if (node.left == null) return node.right;   // Нет левого потомка
-
-            // Есть оба потомка: находим минимальный элемент в правом поддереве
-            Node t = node;
-            node = min(t.right);
-            node.right = deleteMin(t.right);
-            node.left = t.left;
+            Node successor = min(node.right);
+            node.value = successor.value;
+            node.right = deleteMin(node.right);
         }
         return node;
     }
 
     private Node min(Node node) {
-        if (node.left == null) return node;
-        return min(node.left);
+        while (node.left != null) {
+            node = node.left;
+        }
+        return node;
     }
 
     private Node deleteMin(Node node) {
-        if (node.left == null) return node.right;
+        if (node.left == null) {
+            return node.right;
+        }
         node.left = deleteMin(node.left);
         return node;
     }
+
+    public void clear() {
+        root = null;
+    }
+
+    public boolean isEmpty() {
+        return root == null;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        buildInOrder(root, sb);
+        if (sb.length() == 0) {
+            return "Пусто";
+        }
+        return sb.toString().trim();
+    }
+
+    private void buildInOrder(Node node, StringBuilder sb) {
+        if (node == null) {
+            return;
+        }
+        buildInOrder(node.left, sb);
+        sb.append(node.value).append(' ');
+        buildInOrder(node.right, sb);
+    }
+    private int calculateHeight(Node node) {
+        if (node == null) return 0;
+        // Высота — это 1 (текущий узел) + высота самого глубокого поддерева
+        return 1 + Math.max(calculateHeight(node.left), calculateHeight(node.right));
+    }
+    // Главный метод, который вызывает рендерер
+    public void updateLayout(Map<Integer, NodeLayout> layoutMap, int width, int height) {
+        // Вычисляем новые целевые позиции
+        calculateTargets(layoutMap, root, width / 2f, height*0.2f, width / 4f, (height*0.8f/(float)(calculateHeight(root))), null);
+
+        // Удаляем из карты тех, кого больше нет в дереве
+        layoutMap.keySet().removeIf(key -> !contains(key));
+    }
+    private void calculateTargets(Map<Integer, NodeLayout> layoutMap, Node node, float x, float y, float xOffset, float yOffset, NodeLayout parentLayout){
+        if(node == null) return;
+
+        NodeLayout layout = layoutMap.get(node.value);
+
+        if(layout == null){
+            if(parentLayout != null){
+                layout = new NodeLayout(parentLayout.x, parentLayout.y);
+                layout.targetX = x;
+                layout.targetY = y;
+            }
+            else
+                layout = new NodeLayout(x, y);
+            layoutMap.put(node.value, layout);
+        }
+        else{
+            layout.targetX = x;
+            layout.targetY = y;
+        }
+
+        float rXOffset = xOffset;
+        if((node.left == null && node.right != null) || (node.left != null && node.right == null)){
+            rXOffset = 0;
+        }
+        calculateTargets(layoutMap, node.left, x-rXOffset,   y + yOffset, xOffset/2, yOffset, layout);
+        calculateTargets(layoutMap, node.right, x +rXOffset, y + yOffset, xOffset/2, yOffset, layout);
+    }
+
 }

@@ -1,52 +1,48 @@
 package logic;
 
-public class BSTHashTable<K extends Comparable<K>, V> {
+public class BSTHashTable {
 
     private final int capacity;
-    private final BinarySearchTree<K, V>[] table;
+    private final BinarySearchTree[] table;
 
-    @SuppressWarnings("unchecked")
     public BSTHashTable(int capacity) {
+        if (capacity <= 0) {
+            throw new IllegalArgumentException("Capacity must be positive");
+        }
         this.capacity = capacity;
-        // Создаем массив деревьев
-        table = (BinarySearchTree<K, V>[]) new BinarySearchTree[capacity];
-
-        // Инициализируем каждую корзину пустым деревом
+        this.table = new BinarySearchTree[capacity];
         for (int i = 0; i < capacity; i++) {
-            table[i] = new BinarySearchTree<>();
+            table[i] = new BinarySearchTree();
         }
     }
 
-    // Вычисление индекса корзины на основе хеш-кода
-    private int hash(K key) {
-        // Убираем знак минус с помощью побитового И и берем остаток от деления
-        return (key.hashCode() & 0x7fffffff) % capacity;
+    private int hash(int value) {
+        return Math.floorMod(value, capacity);
     }
 
-    // Добавление элемента
-    public void put(K key, V value) {
-        if (key == null) throw new IllegalArgumentException("Ключ не может быть null");
-        int index = hash(key);
-        table[index].put(key, value);
+    public void add(int value) {
+        table[hash(value)].insert(value);
     }
 
-    // Получение элемента
-    public V get(K key) {
-        if (key == null) throw new IllegalArgumentException("Ключ не может быть null");
-        int index = hash(key);
-        return table[index].get(key);
+    public boolean contains(int value) {
+        return table[hash(value)].contains(value);
     }
 
-    // Удаление элемента
-    public void remove(K key) {
-        if (key == null) throw new IllegalArgumentException("Ключ не может быть null");
-        int index = hash(key);
-        table[index].remove(key);
+    public void remove(int value) {
+        table[hash(value)].remove(value);
     }
-    public int getCapacity(){
-        return this.capacity;
+
+    public void clear() {
+        for (BinarySearchTree tree : table) {
+            tree.clear();
+        }
     }
-    public BinarySearchTree<K, V> getTreeAt(int index) {
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public BinarySearchTree getTreeAt(int index) {
         return table[index];
     }
 }
