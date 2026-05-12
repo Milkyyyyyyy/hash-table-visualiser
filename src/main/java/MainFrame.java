@@ -214,7 +214,7 @@ public class MainFrame extends JFrame {
         int count = 0;
         int errCount = 0;
         while(count < amount){
-            int nextValue = random.nextInt(0, amount);
+            int nextValue = random.nextInt(-amount, amount);
             if(!hashTable.contains(nextValue) || errCount > 50){
                 addWithoutAnim(nextValue);
                 errCount = 0;
@@ -246,6 +246,7 @@ public class MainFrame extends JFrame {
         centerRenderer.setVerticalAlignment(JLabel.CENTER);
         jTable.getColumnModel().getColumn(0).setMaxWidth(100);
         jTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        jTable.getColumnModel().getColumn(0).setCellRenderer(new SelectedCellBorderRenderer());
 
         // Колонка дерева — кастомный рендерер
         jTable.getColumnModel().getColumn(1).setCellRenderer(new BSTRenderer(stepPlayer));
@@ -316,7 +317,9 @@ public class MainFrame extends JFrame {
             @Override
             public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
                     throws BadLocationException {
-                if (string.matches("\\d+")) {
+                String text = getText(fb);
+                String newText = text.substring(0, offset) + string + text.substring(offset);
+                if (isValidInteger(newText)) {
                     super.insertString(fb, offset, string, attr);
                 }
             }
@@ -324,9 +327,27 @@ public class MainFrame extends JFrame {
             @Override
             public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
                     throws BadLocationException {
-                if (text.isEmpty() || text.matches("\\d+")) {
+                String current = getText(fb);
+                String newText = current.substring(0, offset) + text + current.substring(offset + length);
+                if (isValidInteger(newText)) {
                     super.replace(fb, offset, length, text, attrs);
                 }
+            }
+
+            // получаем текст из документа целиком
+            private String getText(FilterBypass fb) {
+                try {
+                    return fb.getDocument().getText(0, fb.getDocument().getLength());
+                } catch (BadLocationException ignore) {
+                }
+                return "";
+            }
+
+            // проверяет, что текст — корректное целое число (с минусом)
+            private boolean isValidInteger(String s) {
+                if (s.isEmpty()) return true;           // пустое поле
+                if (s.equals("-")) return true;        // только минус
+                return s.matches("-?\\d+");             // знак минус и затем цифры
             }
         });
     }
@@ -350,6 +371,7 @@ public class MainFrame extends JFrame {
         centeredRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
         jTable.getColumnModel().getColumn(0).setCellRenderer(centeredRenderer);
+        jTable.getColumnModel().getColumn(0).setCellRenderer(new SelectedCellBorderRenderer());
         jTable.getColumnModel().getColumn(0).setPreferredWidth(60);
         jTable.getColumnModel().getColumn(0).setMaxWidth(60);
 

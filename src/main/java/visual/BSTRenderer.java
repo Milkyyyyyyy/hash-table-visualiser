@@ -17,6 +17,8 @@ import java.util.Map;
  */
 public class BSTRenderer extends JPanel implements TableCellRenderer {
 
+    private static final Color SELECTED_BORDER = new Color(0, 120, 255, 120);
+
     /** Карта: дерево → позиции его узлов. */
     private final Map<BinarySearchTree, Map<Integer, NodeLayout>> allLayouts = new HashMap<>();
 
@@ -26,6 +28,7 @@ public class BSTRenderer extends JPanel implements TableCellRenderer {
 
 
     public BSTRenderer(StepPlayer stepPlayer){
+        setOpaque(true);
         this.stepPlayer = stepPlayer;
     }
     @Override
@@ -41,9 +44,14 @@ public class BSTRenderer extends JPanel implements TableCellRenderer {
         if (isSelected) {
             setForeground(table.getSelectionForeground());
             setBackground(table.getSelectionBackground());
+            setBorder(BorderFactory.createLineBorder(SELECTED_BORDER, 2));
         } else {
             setForeground(table.getForeground());
             setBackground(table.getBackground());
+            setBorder(BorderFactory.createMatteBorder(
+                    0, 0, 1, 1,
+                    table.getGridColor()
+            ));
         }
 
         setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, table.getGridColor()));

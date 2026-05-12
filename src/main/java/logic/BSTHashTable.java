@@ -24,7 +24,11 @@ public class BSTHashTable {
 
     /** Возвращает индекс бакета для заданного значения. */
     private int hash(int value) {
-        return Math.floorMod(value, capacity);
+        int h = value;
+        h ^= (h >>> 16);
+        h *= 0x9E3779B9;
+        h ^= (h >>> 16);
+        return Math.floorMod(h, capacity);
     }
 
     public int getBucketIndex(int value){
