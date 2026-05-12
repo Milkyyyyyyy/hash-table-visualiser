@@ -1,0 +1,189 @@
+{
+  "nodes": [
+    {
+      "id": "main",
+      "type": "text",
+      "text": "Main",
+      "x": 0,
+      "y": -200,
+      "width": 120,
+      "height": 60
+    },
+    {
+      "id": "mainframe",
+      "type": "text",
+      "text": "MainFrame",
+      "x": 0,
+      "y": -80,
+      "width": 120,
+      "height": 60
+    },
+    {
+      "id": "bsthash",
+      "type": "text",
+      "text": "BSTHashTable",
+      "x": -280,
+      "y": 80,
+      "width": 140,
+      "height": 60
+    },
+    {
+      "id": "bst",
+      "type": "text",
+      "text": "BinarySearchTree\n(buckets)",
+      "x": -280,
+      "y": 200,
+      "width": 140,
+      "height": 60
+    },
+    {
+      "id": "node",
+      "type": "text",
+      "text": "Node",
+      "x": -450,
+      "y": 200,
+      "width": 120,
+      "height": 60
+    },
+    {
+      "id": "stepplayer",
+      "type": "text",
+      "text": "StepPlayer",
+      "x": 200,
+      "y": 80,
+      "width": 120,
+      "height": 60
+    },
+    {
+      "id": "step",
+      "type": "text",
+      "text": "Step",
+      "x": 200,
+      "y": 200,
+      "width": 120,
+      "height": 60
+    },
+    {
+      "id": "bstcanvas",
+      "type": "text",
+      "text": "BSTCanvas",
+      "x": 480,
+      "y": 80,
+      "width": 120,
+      "height": 60
+    },
+    {
+      "id": "treepainter",
+      "type": "text",
+      "text": "TreePainter",
+      "x": 480,
+      "y": 200,
+      "width": 120,
+      "height": 60
+    },
+    {
+      "id": "nodelayout",
+      "type": "text",
+      "text": "NodeLayout",
+      "x": 650,
+      "y": 200,
+      "width": 120,
+      "height": 60
+    },
+    {
+      "id": "logpanel",
+      "type": "text",
+      "text": "OperationLogPanel",
+      "x": 480,
+      "y": -80,
+      "width": 140,
+      "height": 60
+    },
+    {
+      "id": "htmodel",
+      "type": "text",
+      "text": "HashTableModel",
+      "x": 0,
+      "y": 80,
+      "width": 140,
+      "height": 60
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "fromNode": "main",
+      "toNode": "mainframe"
+    },
+    {
+      "id": "e2",
+      "fromNode": "mainframe",
+      "toNode": "bsthash"
+    },
+    {
+      "id": "e3",
+      "fromNode": "mainframe",
+      "toNode": "htmodel"
+    },
+    {
+      "id": "e4",
+      "fromNode": "mainframe",
+      "toNode": "stepplayer"
+    },
+    {
+      "id": "e5",
+      "fromNode": "mainframe",
+      "toNode": "bstcanvas"
+    },
+    {
+      "id": "e6",
+      "fromNode": "mainframe",
+      "toNode": "logpanel"
+    },
+    {
+      "id": "e7",
+      "fromNode": "bsthash",
+      "toNode": "bst"
+    },
+    {
+      "id": "e8",
+      "fromNode": "bst",
+      "toNode": "node"
+    },
+    {
+      "id": "e9",
+      "fromNode": "bst",
+      "toNode": "step"
+    },
+    {
+      "id": "e10",
+      "fromNode": "stepplayer",
+      "toNode": "step"
+    },
+    {
+      "id": "e11",
+      "fromNode": "bstcanvas",
+      "toNode": "treepainter"
+    },
+    {
+      "id": "e12",
+      "fromNode": "treepainter",
+      "toNode": "nodelayout"
+    },
+    {
+      "id": "e13",
+      "fromNode": "htmodel",
+      "toNode": "bsthash"
+    },
+    {
+      "id": "e14",
+      "fromNode": "stepplayer",
+      "toNode": "logpanel"
+    },
+    {
+      "id": "e15",
+      "fromNode": "bstcanvas",
+      "toNode": "stepplayer"
+    }
+  ]
+}
