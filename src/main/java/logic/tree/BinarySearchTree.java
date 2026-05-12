@@ -266,8 +266,6 @@ public class BinarySearchTree {
         while (current != null) {
             if (value == current.value) break;
 
-            steps.add(new Step(current.value, bucketIndex,
-                    "Сравниваем " + value + " и " + current.value, Step.COLOR_DEFAULT));
             current = getNode(value, steps, bucketIndex, current);
         }
 
