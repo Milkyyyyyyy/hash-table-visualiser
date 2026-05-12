@@ -6,19 +6,30 @@ import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import javax.swing.*;
 
 /**
- * Точка входа в приложение.
- * Инициализирует тему FlatLaf и запускает главное окно в потоке EDT.
+ * Главная точка входа в приложение.
+ *
+ * Отвечает за:
+ * - Инициализацию темы оформления FlatLaf (современный светлый стиль)
+ * - Запуск главного окна приложения в потоке EDT (Event Dispatch Thread)
+ *
+ * Используемая тема: {@link FlatMacLightLaf} — чистый светлый дизайн, похожий на macOS.
  */
 public class Main {
+
+    /**
+     * Точка входа приложения.
+     *
+     * @param args аргументы командной строки (не используются)
+     */
     public static void main(String[] args) {
         try {
             FlatLightLaf.setup();
             UIManager.setLookAndFeel(new FlatMacLightLaf());
-
         } catch (Exception ex) {
-            System.err.println("Не удалось инициализировать FlatLaf: " + ex.getMessage());
+            System.err.println("Ошибка при инициализации FlatLaf: " + ex.getMessage());
         }
 
+        // Запускаем GUI в потоке EDT, как требует Swing
         SwingUtilities.invokeLater(() -> {
             MainFrame frame = new MainFrame();
             frame.setVisible(true);
