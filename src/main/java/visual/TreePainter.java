@@ -16,7 +16,7 @@ public class TreePainter {
     private static final int DEFAULT_NODE_HEIGHT = 10;
 
     /** Скорость интерполяции анимации (lerp-коэффициент, 0–1). */
-    private static final float ANIMATION_SPEED = 0.01f;
+    private static final float ANIMATION_SPEED = 0.05f;
 
     /** Порог: если расстояние до цели меньше этого — считаем, что узел на месте. */
     private static final float ANIMATION_THRESHOLD = 0.01f;

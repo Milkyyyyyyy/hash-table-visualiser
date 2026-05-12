@@ -266,20 +266,20 @@ public class BinarySearchTree {
         while (current != null) {
             if (value == current.value) break;
 
-            steps.add(new Step(current.value, null,
+            steps.add(new Step(current.value, bucketIndex,
                     "Сравниваем " + value + " и " + current.value, Step.COLOR_DEFAULT));
             current = getNode(value, steps, bucketIndex, current);
         }
 
         // Узел не найден
         if (current == null) {
-            steps.add(new Step(null, null,
+            steps.add(new Step(null, bucketIndex,
                     "Не найдено: " + value, Step.COLOR_FAIL));
             return steps;
         }
 
         // Шаг 3: нашли узел — показываем какой случай удаления
-        steps.add(new Step(current.value, null,
+        steps.add(new Step(current.value, bucketIndex,
                 "Нашли узел: " + value, Step.COLOR_SUCCESS));
 
         boolean hasLeft  = current.left  != null;
@@ -287,36 +287,36 @@ public class BinarySearchTree {
 
         if (!hasLeft && !hasRight) {
             // Случай 1: листовой узел
-            steps.add(new Step(current.value, null,
+            steps.add(new Step(current.value, bucketIndex,
                     "Узел — лист, просто удаляем", Step.COLOR_SUCCESS));
 
         } else if (!hasLeft || !hasRight) {
             // Случай 2: один потомок
             Node child = hasRight ? current.right : current.left;
-            steps.add(new Step(current.value, null,
+            steps.add(new Step(current.value, bucketIndex,
                     "Один потомок — заменяем узел на " + child.value, Step.COLOR_DEFAULT));
-            steps.add(new Step(child.value, null,
+            steps.add(new Step(child.value, bucketIndex,
                     child.value + " встаёт на место " + value, Step.COLOR_SUCCESS));
 
         } else {
             // Случай 3: два потомка — ищем минимум правого поддерева
-            steps.add(new Step(current.value, null,
+            steps.add(new Step(current.value, bucketIndex,
                     "Два потомка — ищем минимум правого поддерева", Step.COLOR_DEFAULT));
 
             Node successor = current.right;
             while (successor.left != null) {
-                steps.add(new Step(successor.value, null,
+                steps.add(new Step(successor.value, bucketIndex,
                         "Идём влево: " + successor.value, Step.COLOR_DEFAULT));
                 successor = successor.left;
             }
-            steps.add(new Step(successor.value, null,
+            steps.add(new Step(successor.value, bucketIndex,
                     "Минимум правого поддерева: " + successor.value, Step.COLOR_DEFAULT));
-            steps.add(new Step(current.value, null,
+            steps.add(new Step(current.value, bucketIndex,
                     "Заменяем " + value + " → " + successor.value, Step.COLOR_SUCCESS));
         }
 
         // Реальное удаление — в самом конце, после всех визуальных шагов
-        steps.add(new Step(null, null,
+        steps.add(new Step(null, bucketIndex,
                 "Удалено: " + value, Step.COLOR_SUCCESS,
                 () -> remove(value)));
 

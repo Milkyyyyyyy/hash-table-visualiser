@@ -47,7 +47,6 @@ public class MainFrame extends JFrame {
         tableModel = new HashTableModel(hashTable);
         bstCanvas  = new BSTCanvas();
         logPanel   = new OperationLogPanel();
-        logPanel.setPreferredSize(new Dimension(700, 200));
 
         stepPlayer = new StepPlayer(
                 () -> {
@@ -104,7 +103,7 @@ public class MainFrame extends JFrame {
         inputField.putClientProperty("JTextField.placeholderText", "Введите число");
         setupIntOnlyFilter(inputField);
 
-        JSlider animationSlider = new JSlider(50, 2000, 50);
+        JSlider animationSlider = new JSlider(10, 2000, 50);
         animationSlider.setPreferredSize(new Dimension(130, 30));
         animationSlider.addChangeListener(new ChangeListener() {
             @Override
@@ -138,10 +137,8 @@ public class MainFrame extends JFrame {
         tableSizeSlider.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         tableSizeSlider.addChangeListener(e -> {
-            if (!tableSizeSlider.getValueIsAdjusting()) {
                 resizeHashTable(tableSizeSlider.getValue());
                 sizeSliderLabel.setText("Размер хеш-таблицы: " + tableSizeSlider.getValue());
-            }
         });
 
         sizeSliderPanel.add(sizeSliderLabel);
@@ -213,13 +210,18 @@ public class MainFrame extends JFrame {
     private void onRandomize(){
         onClear();
         Random random = new Random();
-        int amount = random.nextInt(2, 4) * hashTable.getCapacity();
+        int amount = random.nextInt(2, 10) * hashTable.getCapacity();
         int count = 0;
+        int errCount = 0;
         while(count < amount){
-            int nextValue = random.nextInt(0, 300);
-            if(!hashTable.contains(nextValue)){
+            int nextValue = random.nextInt(0, amount);
+            if(!hashTable.contains(nextValue) || errCount > 50){
                 addWithoutAnim(nextValue);
+                errCount = 0;
                 count++;
+            }
+            else{
+                errCount++;
             }
         }
     }
@@ -231,8 +233,9 @@ public class MainFrame extends JFrame {
         jTable.setRowHeight(80);
         jTable.setShowGrid(true);
         jTable.setGridColor(Color.LIGHT_GRAY);
-        jTable.setSelectionBackground(new Color(239, 244, 250));
+        jTable.setSelectionBackground(new Color(100, 100, 255, 30));
         jTable.setSelectionForeground(new Color(10, 10, 10));
+        jTable.setBackground(new Color(0xF6F6F6));
         jTable.setForeground(new Color(10, 10, 10));
         jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jTable.getTableHeader().setReorderingAllowed(false);
@@ -280,7 +283,7 @@ public class MainFrame extends JFrame {
 
         JPanel rightPanel = new JPanel(new BorderLayout());
         rightPanel.add(bstCanvas, BorderLayout.NORTH);
-        rightPanel.add(logPanel,  BorderLayout.CENTER);
+        rightPanel.add(logPanel,  BorderLayout.SOUTH);
         return rightPanel;
     }
 
@@ -334,10 +337,24 @@ public class MainFrame extends JFrame {
         tableModel = new HashTableModel(hashTable);
 
         jTable.setModel(tableModel);
+        configureTableColumns();
         jTable.getColumnModel().getColumn(1).setCellRenderer(new BSTRenderer(stepPlayer));
 
         bstCanvas.setTree(null);
         jTable.clearSelection();
         refresh();
+    }
+    private void configureTableColumns() {
+        // Первый столбец
+        DefaultTableCellRenderer centeredRenderer = new DefaultTableCellRenderer();
+        centeredRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+        jTable.getColumnModel().getColumn(0).setCellRenderer(centeredRenderer);
+        jTable.getColumnModel().getColumn(0).setPreferredWidth(60);
+        jTable.getColumnModel().getColumn(0).setMaxWidth(60);
+
+        // Второй столбец
+        jTable.getColumnModel().getColumn(1)
+                .setCellRenderer(new BSTRenderer(stepPlayer));
     }
 }

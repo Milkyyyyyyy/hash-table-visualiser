@@ -1,4 +1,7 @@
+import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.FlatPropertiesLaf;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
 import javax.swing.*;
 
@@ -10,6 +13,8 @@ public class Main {
     public static void main(String[] args) {
         try {
             FlatLightLaf.setup();
+            UIManager.setLookAndFeel(new FlatMacLightLaf());
+
         } catch (Exception ex) {
             System.err.println("Не удалось инициализировать FlatLaf: " + ex.getMessage());
         }
