@@ -1,4 +1,6 @@
-package logic;
+package logic.hashtable;
+
+import logic.tree.BinarySearchTree;
 
 /**
  * Хеш-таблица с открытой адресацией (цепочками) на основе бинарных деревьев поиска.

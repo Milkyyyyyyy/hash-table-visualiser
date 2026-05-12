@@ -1,4 +1,6 @@
-package visual;
+package visual.log;
+
+import visual.common.SmoothScrollPane;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

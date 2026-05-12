@@ -1,4 +1,4 @@
-package animation;
+package visual.animation;
 
 import javax.swing.*;
 import java.util.List;

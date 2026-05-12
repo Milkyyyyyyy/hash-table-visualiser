@@ -12,7 +12,7 @@
     {
       "id": "main",
       "type": "text",
-      "text": "Main",
+      "text": "app.Main",
       "x": 0,
       "y": -240,
       "width": 100,
@@ -22,7 +22,7 @@
     {
       "id": "mainframe",
       "type": "text",
-      "text": "MainFrame",
+      "text": "app.MainFrame",
       "x": 0,
       "y": -160,
       "width": 100,

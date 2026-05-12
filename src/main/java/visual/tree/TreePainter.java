@@ -1,7 +1,7 @@
-package visual;
+package visual.tree;
 
-import util.Node;
-import util.NodeLayout;
+import model.tree.Node;
+import model.tree.NodeLayout;
 
 import java.awt.*;
 import java.util.Map;

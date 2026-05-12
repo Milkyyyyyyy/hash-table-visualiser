@@ -1,8 +1,8 @@
-package visual;
+package visual.tree;
 
-import animation.StepPlayer;
-import logic.BinarySearchTree;
-import util.NodeLayout;
+import model.tree.NodeLayout;
+import visual.animation.StepPlayer;
+import logic.tree.BinarySearchTree;
 
 import javax.swing.*;
 import java.awt.*;

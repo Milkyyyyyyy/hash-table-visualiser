@@ -1,4 +1,4 @@
-package util;
+package model.tree;
 
 /**
  * Узел бинарного дерева поиска.

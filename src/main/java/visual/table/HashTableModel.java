@@ -1,6 +1,6 @@
-package visual;
+package visual.table;
 
-import logic.BSTHashTable;
+import logic.hashtable.BSTHashTable;
 
 import javax.swing.table.AbstractTableModel;
 

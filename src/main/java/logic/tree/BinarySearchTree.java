@@ -1,9 +1,9 @@
-package logic;
+package logic.tree;
 
-import animation.Step;
-import util.Node;
-import util.NodeLayout;
-import visual.OperationLogPanel;
+import visual.animation.Step;
+import logic.hashtable.BSTHashTable;
+import model.tree.Node;
+import model.tree.NodeLayout;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,8 +1,15 @@
-import animation.Step;
-import animation.StepPlayer;
-import logic.BSTHashTable;
-import logic.BinarySearchTree;
-import visual.*;
+package app;
+
+import visual.animation.Step;
+import visual.animation.StepPlayer;
+import logic.hashtable.BSTHashTable;
+import logic.tree.BinarySearchTree;
+import visual.common.SmoothScrollPane;
+import visual.log.OperationLogPanel;
+import visual.table.BSTRenderer;
+import visual.table.HashTableModel;
+import visual.table.SelectedCellBorderRenderer;
+import visual.tree.BSTCanvas;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -27,7 +34,7 @@ public class MainFrame extends JFrame {
 
     private BSTHashTable hashTable;
     private HashTableModel tableModel;
-    private final BSTCanvas      bstCanvas;
+    private final BSTCanvas bstCanvas;
     private final OperationLogPanel logPanel;
     private SmoothScrollPane scrollPane;
 

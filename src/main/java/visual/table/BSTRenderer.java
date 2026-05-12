@@ -1,9 +1,9 @@
-package visual;
+package visual.table;
 
-import animation.Step;
-import animation.StepPlayer;
-import logic.BinarySearchTree;
-import util.NodeLayout;
+import visual.animation.StepPlayer;
+import logic.tree.BinarySearchTree;
+import model.tree.NodeLayout;
+import visual.tree.TreePainter;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;

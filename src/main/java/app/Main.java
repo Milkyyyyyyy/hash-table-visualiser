@@ -1,6 +1,6 @@
-import com.formdev.flatlaf.FlatDarculaLaf;
+package app;
+
 import com.formdev.flatlaf.FlatLightLaf;
-import com.formdev.flatlaf.FlatPropertiesLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
 import javax.swing.*;
