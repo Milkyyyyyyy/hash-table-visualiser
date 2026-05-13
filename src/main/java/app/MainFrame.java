@@ -110,7 +110,8 @@ public class MainFrame extends JFrame {
         inputField.putClientProperty("JTextField.placeholderText", "Введите число");
         setupIntOnlyFilter(inputField);
 
-        JSlider animationSlider = new JSlider(10, 2000, 50);
+        JSlider animationSlider = new JSlider(10, 2000, 500);
+        stepPlayer.setStepDelay(animationSlider.getValue());
         animationSlider.setPreferredSize(new Dimension(130, 30));
         animationSlider.addChangeListener(new ChangeListener() {
             @Override
@@ -130,7 +131,7 @@ public class MainFrame extends JFrame {
         sliderPanel.add(animationSlider);
 
         JSlider tableSizeSlider = new JSlider(1, 20, INITIAL_TABLE_CAPACITY);
-        tableSizeSlider.setPreferredSize(new Dimension(130, 38));
+        tableSizeSlider.setPreferredSize(new Dimension(130, 40));
         tableSizeSlider.setMajorTickSpacing(5);
         tableSizeSlider.setMinorTickSpacing(1);
         tableSizeSlider.setPaintTicks(true);
