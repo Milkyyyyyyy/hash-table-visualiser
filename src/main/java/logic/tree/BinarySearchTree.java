@@ -103,6 +103,40 @@ public class BinarySearchTree {
         root = null;
     }
 
+    /**
+     * Возвращает элементы дерева в порядке pre-order.
+     * Этот порядок удобно использовать при сохранении, чтобы при загрузке
+     * восстановить ту же форму дерева.
+     */
+    public List<Integer> getPreOrderValues() {
+        List<Integer> values = new ArrayList<>();
+        collectPreOrder(root, values);
+        return values;
+    }
+
+    /**
+     * Возвращает элементы дерева в порядке in-order.
+     */
+    public List<Integer> getInOrderValues() {
+        List<Integer> values = new ArrayList<>();
+        collectInOrder(root, values);
+        return values;
+    }
+
+    private void collectPreOrder(Node node, List<Integer> out) {
+        if (node == null) return;
+        out.add(node.value);
+        collectPreOrder(node.left, out);
+        collectPreOrder(node.right, out);
+    }
+
+    private void collectInOrder(Node node, List<Integer> out) {
+        if (node == null) return;
+        collectInOrder(node.left, out);
+        out.add(node.value);
+        collectInOrder(node.right, out);
+    }
+
     // ── Строковое представление ───────────────────────────────────────────────
 
     /** Возвращает элементы дерева в порядке возрастания (in-order). */
@@ -110,7 +144,7 @@ public class BinarySearchTree {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         appendInOrder(root, sb);
-        return sb.isEmpty() ? "Пусто" : sb.toString().trim();
+        return sb.length() == 0 ? "Пусто" : sb.toString().trim();
     }
 
     private void appendInOrder(Node node, StringBuilder sb) {
